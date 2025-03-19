@@ -13,23 +13,31 @@ SRC				=	ft_printf.c ft_flags_width.c ft_flags_left.c ft_flags_precision.c  ft_i
 					ft_xtoa.c  ft_putchar.c ft_print_str_per.c ft_ptr_len.c  ft_calloc.c ft_isdigit.c ft_strlen.c  \
 					ft_bzero.c
 
-OBJS			=	$(SRC:%.c=%.o)
 
+SRCS 			=	$(SRC)
+
+OBJ_DIR			=	obj
+OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
+
+$(OBJ_DIR)/%.o:		%.c
+					$(CC) $(CFLAGS) -c $< -o $@
 
 all:				$(NAME)
 
-%.o:		%.c	ft_printf.h
-					$(CC) $(CFLAGS) -c $< -o $@
 bonus:				all
 
-$(NAME):			$(OBJS)
+$(NAME):			$(OBJ_DIR) $(OBJS)
 					$(AR) $(ARFLAGS) $(NAME) $(OBJS)
+
+$(OBJ_DIR):
+					mkdir -p $(OBJ_DIR)
+
 clean:
-					
-					$(RM) $(OBJS)
+					$(RM) $(OBJ_DIR)
+
 fclean:				clean
-					
 					$(RM) $(NAME)
+
 re:					fclean all
 
-.PHONY:				clean
+.PHONY:				all bonus clean fclean re
